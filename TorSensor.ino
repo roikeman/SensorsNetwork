@@ -4,17 +4,17 @@
     #include "printf.h"
     
     // many staff you can config:
-    #define SensorUniqeID 2                                  // !!! DO NOT USE 0 AS UNIQE ID it's used to present dead sensors !!!
-    #define sensorTableSize 25                          // Balance between the memory using to remember friends and memory using to run your program.
+    #define SensorUniqeID 4                                   // !!! DO NOT USE 0 AS UNIQE ID it's used to present dead sensors !!!
+    #define sensorTableSize 25                                // Balance between the memory using to remember friends and memory using to run your program.
     #define broadCastAdr 0xA8A8E1FC00LL
     #define privateAdr (broadCastAdr + SensorUniqeID)
-    #define friendLestSeenTimeOut 30        // Timeout for giveup on dead sensor.
+    #define friendLestSeenTimeOut 30                          // Timeout for giveup on dead sensor.
     
     
-    //const  byte sensorTableSize = 25; // Balance between the memory using to remember friends and memory using to run your program.
+    //const  byte sensorTableSize = 25;           // Balance between the memory using to remember friends and memory using to run your program.
     //const  long broadCastAdr = 0xA8A8E1FC00LL ;
-    //const  byte SensorUniqeID = 1; // !!! DO NOT USE 0 AS UNIQE ID it's used to present dead sensors !!!
-    //const  byte friendLestSeenTimeOut = 30; // Timeout for giveup on dead sensor.
+    //const  byte SensorUniqeID = 1;              // !!! DO NOT USE 0 AS UNIQE ID it's used to present dead sensors !!!
+    //const  byte friendLestSeenTimeOut = 30;     // Timeout for giveup on dead sensor.
     
     // flags:
     const byte ScreamFlag = B1;
@@ -85,7 +85,9 @@
       pinMode(2, INPUT);
     
       printf("init end!");
-    
+      
+      //Interrupt  
+      attachInterrupt(0, networkCorn, FALLING);    
     }
     
     void  loop() {
@@ -93,7 +95,7 @@
       unsigned long timeLs = millis();
       char str[] = "hila" ;
       while (true){
-        networkCorn();
+        //networkCorn();
         
         if(time+2000 < millis()){
           printNebList();
@@ -168,6 +170,7 @@
     function that read from RF24 buffers and take care about new messages and need to be called permanently.
     **/
     void networkCorn() {
+      printf("corn!\n");
       byte i;
       ScreamMassage msgBuff;
       if (radio.available()) {
